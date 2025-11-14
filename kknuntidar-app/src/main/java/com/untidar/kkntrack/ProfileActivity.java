@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.untidar.kkntrack.util.UiUtils;
 import androidx.appcompat.app.AppCompatActivity;
 import com.untidar.kkntrack.database.DatabaseHelper;
 import com.untidar.kkntrack.model.User;
@@ -69,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
                     startActivityForResult(intent, 100);
                 } catch (Exception e) {
                     Log.e("ProfileActivity", "Error starting EditProfileActivity", e);
-                    Toast.makeText(ProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    UiUtils.showSnack(ProfileActivity.this, "Error: " + e.getMessage());
                 }
             }
         });
@@ -82,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
                     startActivity(new Intent(ProfileActivity.this, ChangePasswordActivity.class));
                 } catch (Exception e) {
                     Log.e("ProfileActivity", "Error starting ChangePasswordActivity", e);
-                    Toast.makeText(ProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    UiUtils.showSnack(ProfileActivity.this, "Error: " + e.getMessage());
                 }
             }
         });
@@ -93,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == RESULT_OK) {
             loadUserProfile(); // Refresh profile data
-            Toast.makeText(this, "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Profil berhasil diperbarui");
         }
     }
 
@@ -116,7 +117,7 @@ public class ProfileActivity extends AppCompatActivity {
         String userEmail = sharedPreferences.getString("userEmail", "");
         int totalActivities = databaseHelper.getActivitiesCountByUser(userEmail);
 
-        Toast.makeText(this, "Total kegiatan Anda: " + totalActivities, Toast.LENGTH_LONG).show();
+    UiUtils.showSnackLong(this, "Total kegiatan Anda: " + totalActivities);
     }
 
     @Override

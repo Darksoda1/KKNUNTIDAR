@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.untidar.kkntrack.util.UiUtils;
 import androidx.appcompat.app.AppCompatActivity;
 import com.untidar.kkntrack.database.DatabaseHelper;
 import com.untidar.kkntrack.model.User;
@@ -62,17 +63,17 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (fullName.isEmpty() || nim.isEmpty() || email.isEmpty() ||
                 phone.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(this, "Mohon isi semua field", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Mohon isi semua field");
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Password tidak cocok", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Password tidak cocok");
             return;
         }
 
         if (databaseHelper.checkUserExists(email)) {
-            Toast.makeText(this, "Email sudah terdaftar", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Email sudah terdaftar");
             return;
         }
 
@@ -80,10 +81,10 @@ public class RegisterActivity extends AppCompatActivity {
         long result = databaseHelper.addUser(user);
 
         if (result != -1) {
-            Toast.makeText(this, "Registrasi berhasil", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Registrasi berhasil");
             finish();
         } else {
-            Toast.makeText(this, "Registrasi gagal", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Registrasi gagal");
         }
     }
 }

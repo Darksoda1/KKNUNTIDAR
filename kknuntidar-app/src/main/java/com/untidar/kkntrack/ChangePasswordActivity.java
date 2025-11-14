@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.untidar.kkntrack.util.UiUtils;
 import androidx.appcompat.app.AppCompatActivity;
 import com.untidar.kkntrack.database.DatabaseHelper;
 
@@ -61,17 +62,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
         if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(this, "Mohon isi semua field", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Mohon isi semua field");
             return;
         }
 
         if (newPassword.length() < 6) {
-            Toast.makeText(this, "Password baru minimal 6 karakter", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Password baru minimal 6 karakter");
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            Toast.makeText(this, "Konfirmasi password tidak cocok", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Konfirmasi password tidak cocok");
             return;
         }
 
@@ -79,17 +80,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         // Check current password
         if (!databaseHelper.checkUser(userEmail, currentPassword)) {
-            Toast.makeText(this, "Password saat ini salah", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Password saat ini salah");
             return;
         }
 
         // Update password
         boolean success = databaseHelper.updateUserPassword(userEmail, newPassword);
         if (success) {
-            Toast.makeText(this, "Password berhasil diubah", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Password berhasil diubah");
             finish();
         } else {
-            Toast.makeText(this, "Gagal mengubah password", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Gagal mengubah password");
         }
     }
 

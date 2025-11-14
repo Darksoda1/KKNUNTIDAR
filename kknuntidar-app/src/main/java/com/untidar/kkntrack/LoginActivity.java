@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.untidar.kkntrack.util.UiUtils;
 import androidx.appcompat.app.AppCompatActivity;
 import com.untidar.kkntrack.database.DatabaseHelper;
 import com.untidar.kkntrack.model.User;
@@ -58,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         tvForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Fitur lupa password akan segera tersedia", Toast.LENGTH_SHORT).show();
+                UiUtils.showSnack(LoginActivity.this, "Fitur lupa password akan segera tersedia");
             }
         });
     }
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Mohon isi semua field", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Mohon isi semua field");
             return;
         }
 
@@ -85,14 +86,14 @@ public class LoginActivity extends AppCompatActivity {
             editor.putInt("userId", user.getId());
             editor.apply();
 
-            Toast.makeText(this, "Login berhasil! Selamat datang " + user.getFullName(), Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Login berhasil! Selamat datang " + user.getFullName());
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(this, "Email atau password salah", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Email atau password salah");
         }
     }
 

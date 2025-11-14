@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.untidar.kkntrack.util.UiUtils;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -90,7 +91,7 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
         recyclerView.setAdapter(adapter);
 
         if (activities.isEmpty()) {
-            Toast.makeText(this, "Belum ada kegiatan. Tambahkan kegiatan pertama Anda!", Toast.LENGTH_LONG).show();
+            UiUtils.showSnackLong(this, "Belum ada kegiatan. Tambahkan kegiatan pertama Anda!");
         }
     }
 
@@ -154,7 +155,7 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
                 String location = etLocation.getText().toString().trim();
 
                 if (title.isEmpty() || description.isEmpty() || date.isEmpty() || time.isEmpty() || location.isEmpty()) {
-                    Toast.makeText(ActivityLogActivity.this, "Mohon isi semua field", Toast.LENGTH_SHORT).show();
+                    UiUtils.showSnack(ActivityLogActivity.this, "Mohon isi semua field");
                     return;
                 }
 
@@ -163,12 +164,12 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
                 long result = databaseHelper.addActivity(activity);
 
                 if (result != -1) {
-                    Toast.makeText(ActivityLogActivity.this, "Kegiatan berhasil ditambahkan", Toast.LENGTH_SHORT).show();
+                    UiUtils.showSnack(ActivityLogActivity.this, "Kegiatan berhasil ditambahkan");
                     dialog.dismiss();
                     loadActivities();
                     currentPhotoPath = null; // Reset photo path
                 } else {
-                    Toast.makeText(ActivityLogActivity.this, "Gagal menambahkan kegiatan", Toast.LENGTH_SHORT).show();
+                    UiUtils.showSnack(ActivityLogActivity.this, "Gagal menambahkan kegiatan");
                 }
             }
         });
@@ -206,7 +207,7 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                Toast.makeText(this, "Error creating image file", Toast.LENGTH_SHORT).show();
+                UiUtils.showSnack(this, "Error creating image file");
             }
 
             if (photoFile != null) {
@@ -238,16 +239,16 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CAMERA) {
-                Toast.makeText(this, "Foto berhasil diambil", Toast.LENGTH_SHORT).show();
+                if (requestCode == REQUEST_CAMERA) {
+                UiUtils.showSnack(this, "Foto berhasil diambil");
             } else if (requestCode == REQUEST_GALLERY && data != null) {
                 Uri selectedImage = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
                     currentPhotoPath = saveImageToInternalStorage(bitmap);
-                    Toast.makeText(this, "Foto berhasil dipilih", Toast.LENGTH_SHORT).show();
+                    UiUtils.showSnack(this, "Foto berhasil dipilih");
                 } catch (IOException e) {
-                    Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();
+                    UiUtils.showSnack(this, "Error loading image");
                 }
             }
         }
@@ -321,10 +322,10 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
                 .setPositiveButton("Ya", (dialog, which) -> {
                     boolean success = databaseHelper.deleteActivity(activity.getId());
                     if (success) {
-                        Toast.makeText(this, "Kegiatan berhasil dihapus", Toast.LENGTH_SHORT).show();
+                        UiUtils.showSnack(ActivityLogActivity.this, "Kegiatan berhasil dihapus");
                         loadActivities();
                     } else {
-                        Toast.makeText(this, "Gagal menghapus kegiatan", Toast.LENGTH_SHORT).show();
+                        UiUtils.showSnack(ActivityLogActivity.this, "Gagal menghapus kegiatan");
                     }
                 })
                 .setNegativeButton("Tidak", null)
@@ -364,8 +365,8 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
             String time = etTime.getText().toString().trim();
             String location = etLocation.getText().toString().trim();
 
-            if (title.isEmpty() || description.isEmpty() || date.isEmpty() || time.isEmpty() || location.isEmpty()) {
-                Toast.makeText(ActivityLogActivity.this, "Mohon isi semua field", Toast.LENGTH_SHORT).show();
+                if (title.isEmpty() || description.isEmpty() || date.isEmpty() || time.isEmpty() || location.isEmpty()) {
+                UiUtils.showSnack(ActivityLogActivity.this, "Mohon isi semua field");
                 return;
             }
 
@@ -377,11 +378,11 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
 
             boolean success = databaseHelper.updateActivity(activity);
             if (success) {
-                Toast.makeText(ActivityLogActivity.this, "Kegiatan berhasil diperbarui", Toast.LENGTH_SHORT).show();
+                UiUtils.showSnack(ActivityLogActivity.this, "Kegiatan berhasil diperbarui");
                 dialog.dismiss();
                 loadActivities();
             } else {
-                Toast.makeText(ActivityLogActivity.this, "Gagal memperbarui kegiatan", Toast.LENGTH_SHORT).show();
+                UiUtils.showSnack(ActivityLogActivity.this, "Gagal memperbarui kegiatan");
             }
         });
 
@@ -395,7 +396,7 @@ public class ActivityLogActivity extends AppCompatActivity implements ActivityAd
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             } else {
-                Toast.makeText(this, "Izin kamera diperlukan untuk mengambil foto", Toast.LENGTH_SHORT).show();
+                UiUtils.showSnack(this, "Izin kamera diperlukan untuk mengambil foto");
             }
         }
     }

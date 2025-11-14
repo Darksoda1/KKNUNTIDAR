@@ -23,6 +23,3 @@ Maintainer responsibilities
 
 Editing this file
 - To change maintainer info, edit this file and open a pull request. The current maintainers will review and merge.
-
-Notes
-- Replace placeholder names and emails with the actual maintainer names and contact addresses. If you want, provide me the maintainer names/emails and I will update this file.

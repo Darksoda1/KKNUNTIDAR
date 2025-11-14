@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.untidar.kkntrack.database.DatabaseHelper;
+import com.untidar.kkntrack.util.UiUtils;
 import com.untidar.kkntrack.model.User;
 import android.util.Log;
 
@@ -78,7 +79,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String phone = etPhone.getText().toString().trim();
 
         if (fullName.isEmpty() || nim.isEmpty() || phone.isEmpty()) {
-            Toast.makeText(this, "Mohon isi semua field", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Mohon isi semua field");
             return;
         }
 
@@ -95,14 +96,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 editor.putString("userNim", nim);
                 editor.apply();
 
-                Toast.makeText(this, "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show();
+                UiUtils.showSnack(this, "Profil berhasil diperbarui");
                 setResult(RESULT_OK);
                 finish();
             } else {
-                Toast.makeText(this, "Gagal memperbarui profil", Toast.LENGTH_SHORT).show();
+                UiUtils.showSnack(this, "Gagal memperbarui profil");
             }
         } else {
-            Toast.makeText(this, "Error: Data pengguna tidak ditemukan", Toast.LENGTH_SHORT).show();
+            UiUtils.showSnack(this, "Error: Data pengguna tidak ditemukan");
         }
     }
 

@@ -9,6 +9,12 @@ import com.untidar.kkntrack.model.User;
 import com.untidar.kkntrack.model.Activity;
 import java.util.ArrayList;
 import java.util.List;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import android.util.Base64;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -77,7 +83,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_NIM, user.getNim());
         values.put(COLUMN_USER_EMAIL, user.getEmail());
         values.put(COLUMN_USER_PHONE, user.getPhone());
-        values.put(COLUMN_USER_PASSWORD, user.getPassword());
+        // Hash the password before storing
+        String hashed = hashPassword(user.getPassword());
+        values.put(COLUMN_USER_PASSWORD, hashed);
 
         long result = db.insert(TABLE_USERS, null, values);
         db.close();
@@ -100,7 +108,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean updateUserPassword(String email, String newPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_PASSWORD, newPassword);
+        // Hash the new password before updating
+        String hashed = hashPassword(newPassword);
+        values.put(COLUMN_USER_PASSWORD, hashed);
 
         int result = db.update(TABLE_USERS, values, COLUMN_USER_EMAIL + " = ?",
                 new String[]{email});
@@ -110,16 +120,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_USER_ID};
-        String selection = COLUMN_USER_EMAIL + " = ?" + " AND " + COLUMN_USER_PASSWORD + " = ?";
-        String[] selectionArgs = {email, password};
+        // Retrieve stored password hash for the user and verify
+        String[] columns = {COLUMN_USER_PASSWORD};
+        String selection = COLUMN_USER_EMAIL + " = ?";
+        String[] selectionArgs = {email};
 
         Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
-        int cursorCount = cursor.getCount();
+        String stored = null;
+        if (cursor.moveToFirst()) {
+            stored = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD));
+        }
+
         cursor.close();
         db.close();
 
-        return cursorCount > 0;
+        if (stored == null) return false;
+        return verifyPassword(password, stored);
+    }
+
+    // Password hashing utilities
+    private static final int PBKDF2_ITERATIONS = 10000;
+    private static final int KEY_LENGTH = 256; // bits
+    private static final int SALT_LENGTH = 16; // bytes
+
+    private String hashPassword(String password) {
+        try {
+            byte[] salt = new byte[SALT_LENGTH];
+            SecureRandom sr = new SecureRandom();
+            sr.nextBytes(salt);
+
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, PBKDF2_ITERATIONS, KEY_LENGTH);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] hash = skf.generateSecret(spec).getEncoded();
+
+            String saltB64 = Base64.encodeToString(salt, Base64.NO_WRAP);
+            String hashB64 = Base64.encodeToString(hash, Base64.NO_WRAP);
+
+            // store as salt:hash
+            return saltB64 + ":" + hashB64;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            // In case of error, fallback to storing plain password (not ideal). Log or handle appropriately.
+            e.printStackTrace();
+            return password;
+        }
+    }
+
+    private boolean verifyPassword(String password, String stored) {
+        try {
+            if (stored == null) return false;
+            if (!stored.contains(":")) {
+                // legacy plain password stored
+                return stored.equals(password);
+            }
+
+            String[] parts = stored.split(":");
+            if (parts.length != 2) return false;
+
+            byte[] salt = Base64.decode(parts[0], Base64.NO_WRAP);
+            byte[] hash = Base64.decode(parts[1], Base64.NO_WRAP);
+
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, PBKDF2_ITERATIONS, KEY_LENGTH);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] testHash = skf.generateSecret(spec).getEncoded();
+
+            // Constant-time comparison
+            if (testHash.length != hash.length) return false;
+            int diff = 0;
+            for (int i = 0; i < hash.length; i++) {
+                diff |= hash[i] ^ testHash[i];
+            }
+            return diff == 0;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean checkUserExists(String email) {

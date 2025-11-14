@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="colorAccent">@color/primary_orange</color>
+    <color name="colorPrimary">@color/primary_dark_blue</color>
+    <color name="colorPrimaryDark">@color/primary_dark_blue</color>
+    <color name="dark_gray">#404040</color>
+    <color name="gray">#808080</color>
+    <color name="green">#4CAF50</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="primary_beige">#eae2b7</color>
+    <color name="primary_dark_blue">#003049</color>
+    <color name="primary_orange">#f77f00</color>
+    <color name="primary_red">#d62828</color>
+    <color name="primary_yellow">#fcbf49</color>
+    <color name="red">#F44336</color>
+    <color name="white">#FFFFFF</color>
+    <string name="activity_log">Log Kegiatan</string>
+    <string name="add_activity">Tambah Kegiatan</string>
+    <string name="announcement">Pengumuman</string>
+    <string name="app_name">KKN Track Untidar</string>
+    <string name="cancel">Batal</string>
+    <string name="confirm_delete">Yakin ingin menghapus?</string>
+    <string name="confirm_password">Konfirmasi Password</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="delete">Hapus</string>
+    <string name="edit">Edit</string>
+    <string name="edit_profile">Edit Profil</string>
+    <string name="email">Email</string>
+    <string name="error">Terjadi kesalahan</string>
+    <string name="full_name">Nama Lengkap</string>
+    <string name="kkn_track_untidar">KKN Track Universitas Tidar</string>
+    <string name="loading">Memuat...</string>
+    <string name="location">Lokasi</string>
+    <string name="login">Masuk</string>
+    <string name="logout">Keluar</string>
+    <string name="nim">NIM</string>
+    <string name="no">Tidak</string>
+    <string name="no_activities">Belum ada kegiatan</string>
+    <string name="no_announcements">Belum ada pengumuman</string>
+    <string name="password">Password</string>
+    <string name="phone">No. Telepon</string>
+    <string name="profile">Profil</string>
+    <string name="register">Daftar</string>
+    <string name="report">Laporan</string>
+    <string name="save">Simpan</string>
+    <string name="select_photo">Pilih Foto</string>
+    <string name="success">Berhasil</string>
+    <string name="take_photo">Ambil Foto</string>
+    <string name="view_details">Lihat Detail</string>
+    <string name="welcome">Selamat Datang</string>
+    <string name="yes">Ya</string>
+    <style name="Base.Theme.KKNUNTIDAR" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="ButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="EditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/edittext_background</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Theme.KKNTrack" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/primary_dark_blue</item>
+        <item name="colorPrimaryVariant">@color/primary_dark_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/primary_orange</item>
+        <item name="colorSecondaryVariant">@color/primary_yellow</item>
+        <item name="colorOnSecondary">@color/white</item>
+    </style>
+    <style name="Theme.KKNTrack.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.KKNUNTIDAR" parent="Base.Theme.KKNUNTIDAR"/>
+</resources>
